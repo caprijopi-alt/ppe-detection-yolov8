@@ -1,7 +1,7 @@
 # PPE detection on construction imagery — YOLOv8
 
 Course: MAICEN — Module 4, Unit 3 (Computer Vision) · FMP group assignment
-Team: Americo Nuno Teixeira, Jose Aguiar, Manuel ,Natalia ,Cesare 
+Team:Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
 
 > **Safety label / limitations declaration**
 > This model is an assistive tool for preliminary screening only. It produces false negatives.
@@ -74,7 +74,7 @@ root cause of the recall failure above and drives the whole iteration plan.
 ## 4. Quick start (Colab, no local install)
 
 1. Open [`notebooks/02_Inference.ipynb`](notebooks/02_Inference.ipynb) in Colab:
-   `https://colab.research.google.com/github/[FILL: org]/[FILL: repo]/blob/main/notebooks/02_Inference.ipynb`
+ `https://colab.research.google.com/github/caprijopi-alt/ppe-detection-yolov8/blob/main/notebooks/02_Inference.ipynb`
 2. Runtime → Change runtime type → **T4 GPU** (CPU also works, just slower).
 3. Runtime → **Run all**. It downloads the released weights and runs inference on validation and
    new images.
@@ -126,7 +126,7 @@ Nothing is read from a local drive.
 
 **Error analysis:** [`docs/error_analysis.md`](docs/error_analysis.md)
 
-**Weights:** `best.pt` (6.2 MB, saved from epoch 9) — [FILL: GitHub [best.pt](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/best.pt)]
+**Weights:** [`best.pt`](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/best.pt) (5.96 MB, saved from epoch 9) — GitHub Release `v1.0`
 
 ---
 
@@ -138,7 +138,7 @@ Nothing is read from a local drive.
       `patience=15`
 - [x] **Ultralytics:** 8.4.155 · **torch:** 2.11.0+cu128 · **torchvision:** 0.26.0+cu128 ·
       **roboflow:** 1.5.0 · **numpy:** 2.1.3 · **Python:** 3.13.15
-- [x] **Weights:** `best.pt` from epoch 9, published as a GitHub Release asset
+- [x] **Weights:** [`best.pt`](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/best.pt) from epoch 9, published as a GitHub Release asset (`v1.0`)
 - [x] **API key:** prompted via `getpass`, never committed
 - [x] **Environment snapshot:** full `pip freeze` from the training runtime in
       [`docs/pip_freeze.txt`](docs/pip_freeze.txt) (Colab, 2026-09-19)
@@ -152,12 +152,11 @@ Nothing is read from a local drive.
 - **Runtime:** 24 epochs in 0.292 h (~17.5 min), plus ~5 min dataset download and setup
 - **Outputs produced:** per-class metrics, `results.png`, confusion matrix, PR curve, class
   distribution chart, 6 annotated validation predictions, `best.pt`
-- **Early stopping:** 50 epochs configured; training stopped at epoch 24 after 15 without
-  improvement. Best weights are from **epoch 9**.
-  [FILL — decide before submission: the brief asks for a run of ≥30 epochs. Either (a) state here
-  that 50 were configured and early stopping is a deliberate anti-overfitting measure, with the
-  loss curves as evidence, or (b) re-run with `patience=0` to complete all 50. Option (a) is
-  defensible and free; option (b) removes the argument entirely and costs ~35 min.]
+- **Early stopping:** 50 epochs were configured with `patience=15`; training stopped at epoch 24
+  after 15 without improvement, and best weights are from **epoch 9**. Early stopping is a
+  deliberate anti-overfitting measure rather than a shortened run — the loss curves in
+  `results/results.png` show validation loss flat from epoch 9 onward, so the remaining 26 epochs
+  would have added compute without improving the model.
 
 ---
 
