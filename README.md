@@ -126,7 +126,7 @@ Nothing is read from a local drive.
 
 **Error analysis:** [`docs/error_analysis.md`](docs/error_analysis.md)
 
-**Weights:** `best.pt` (6.2 MB, saved from epoch 9) — [FILL: GitHub Release URL]
+**Weights:** `best.pt` (6.2 MB, saved from epoch 9) — [FILL: GitHub [best.pt](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/best.pt)]
 
 ---
 
