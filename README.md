@@ -1,7 +1,7 @@
 # PPE detection on construction imagery — YOLOv8
 
 Course: MAICEN — Module 4, Unit 3 (Computer Vision) · FMP group assignment
-Team:Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
+:Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
 
 > **Safety label / limitations declaration**
 > This model is an assistive tool for preliminary screening only. It produces false negatives.
