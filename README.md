@@ -1,7 +1,7 @@
 # PPE detection on construction imagery — YOLOv8
 
 Course: MAICEN — Module 4, Unit 3 (Computer Vision) · FMP group assignment
-:Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
+Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
 
 > **Safety label / limitations declaration**
 > This model is an assistive tool for preliminary screening only. It produces false negatives.
@@ -121,8 +121,8 @@ Nothing is read from a local drive.
    recall of 0.545 at n=11 is very wide. Read it as a signal that the class is undertrained and
    under-validated, not as a precise measurement — fixing that support is improvement #1.
 
-**Evidence:** [`results/`](results/) — `results.png`, `confusion_matrix.png`, `BoxPR_curve.png`,
-`class_distribution.png`, plus [`results/evidence/`](results/evidence/).
+**Evidence:** [`results/evidence/`](results/evidence/) — six annotated failure cases, plus validation and new-image predictions.
+
 
 **Error analysis:** [`docs/error_analysis.md`](docs/error_analysis.md)
 
@@ -176,12 +176,12 @@ Nothing is read from a local drive.
 │   ├── error_analysis.md        3 FP + 3 FN with hypotheses, prioritised data fixes
 │   ├── governance_checklist.md  provenance, PII, risk, human-in-the-loop, licence
 │   └── pip_freeze.txt           environment snapshot
-└── results/
-    ├── results.png              loss and mAP curves
-    ├── confusion_matrix.png
-    ├── BoxPR_curve.png
-    ├── class_distribution.png
-    └── evidence/                annotations, validation preds, new-image preds
+├── results/
+│   ├── README.md                what belongs in this folder
+│   └── evidence/                failure cases, validation preds, new-image preds
+└── samples/
+    ├── val/                     10 validation images, fetched by 02_Inference
+    └── new/                     5 unseen images, fetched by 02_Inference
 ```
 
 ---
@@ -197,7 +197,7 @@ Nothing is read from a local drive.
   an Ultralytics Enterprise Licence is obtained.
 - **Evidence screenshots:** derived from the CC BY 4.0 dataset. Faces are visible in some source
   images — see the PII section of [`docs/governance_checklist.md`](docs/governance_checklist.md).
-  ---
+
 
 ## 10. PDF pack
 
