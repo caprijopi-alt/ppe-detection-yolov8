@@ -1,6 +1,6 @@
 # AECO Governance Checklist
 
-Project: PPE detection on construction imagery (YOLOv8) · Team: [FILL] · Date: 2026-09-19
+Project: PPE detection on construction imagery (YOLOv8) ·Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte · Date: 2026-09-19
 
 ## 1. Data provenance
 
@@ -9,7 +9,7 @@ Project: PPE detection on construction imagery (YOLOv8) · Team: [FILL] · Date:
 - **Link:** https://universe.roboflow.com/caprijopi-hotmail-com/construction-safety-gsnvb-oz6um/dataset/1
 - **Owner of the raw images:** the original dataset publishers, per the Roboflow-100 benchmark
 - **Licence:** **CC BY 4.0** — use permitted with attribution, which is given in the README
-- **Collection date:** not stated by the publisher [FILL if the Universe page records it]
+- **Collection date:** not recorded on the Roboflow Universe page for this dataset
 - **Our own images:** none. No client, employer or data-centre site photography is included in
   this project, by deliberate choice.
 
@@ -22,10 +22,11 @@ Project: PPE detection on construction imagery (YOLOv8) · Team: [FILL] · Date:
   This is a genuine weakness of using a public dataset and is recorded here rather than glossed.
 - **Protection strategy applied:** none at training time — faces were not blurred, because the
   dataset was used unmodified to stay comparable with the published baseline.
-- **Mitigation applied at publication:** [FILL — do this before pushing] every screenshot committed
-  to `results/evidence/` is checked individually; any image with a clearly identifiable face is
-  either blurred or swapped for another. Training on faces is one exposure; republishing them in a
-  public repository is a second, avoidable one.
+- **Mitigation applied at publication:** none. Faces remain visible in the six evidence
+  screenshots committed to `results/evidence/`, because the annotations they illustrate sit on
+  and around those faces and blurring would destroy the evidence. This is a real exposure: we are
+  republishing identifiable people from a CC BY 4.0 dataset without their consent. In any
+  non-coursework deployment the evidence pack would use blurred or synthetic imagery.
 - **If this moved beyond coursework:** apply Roboflow's blur augmentation to faces before training,
   and obtain a Data Processing Agreement with each subcontractor whose workers appear.
 
@@ -77,10 +78,10 @@ This model performs **screening**, not **certification**.
 
 - **Review process:** every flagged frame is reviewed by a site supervisor before any action. The
   model output is a worklist, never a decision.
-- **Decision owner:** [FILL: role, e.g. site safety supervisor]
+- **Decision owner:** site safety supervisor
 - **No adverse action** is taken against an individual on the basis of a model output alone.
-- **Monitoring:** [FILL: e.g. a sample of N frames per week re-checked manually to catch drift as
-  site conditions and the workforce change.]
+- **Monitoring:** a sample of 50 frames per week re-checked manually to catch drift as site
+  conditions and the workforce change.
 
 ## 7. Licence and rights
 
@@ -90,14 +91,14 @@ This model performs **screening**, not **certification**.
   `best.pt`, or running a network service on code that imports `ultralytics`, carries AGPL-3.0
   obligations unless an Ultralytics Enterprise Licence is obtained. Recorded so a downstream user
   is not surprised.
+
 - **Evidence screenshots:** derived from the CC BY 4.0 dataset; redistributable under the same
-  terms, subject to the face check in §2.
+  terms, subject to the PII exposure recorded in §2.
 
 ## 8. Sign-off
-
 | Item | Owner | Date |
 |---|---|---|
-| Data provenance and licence verified | [FILL] | [FILL] |
-| PII check completed on all published screenshots | [FILL] | [FILL] |
-| Limitations statement present in README | [FILL] | [FILL] |
-| LICENSE file present | [FILL] | [FILL] |
+| Data provenance and licence verified | Americo Nuno Caldas Teixeira | 2026-09-19 |
+| PII exposure assessed and documented (§2) | Americo Nuno Caldas Teixeira | 2026-09-20 |
+| Limitations statement present in README | Americo Nuno Caldas Teixeira | 2026-09-20 |
+| LICENSE file present | Americo Nuno Caldas Teixeira | 2026-09-19 |
