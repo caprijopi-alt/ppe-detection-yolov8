@@ -25,74 +25,70 @@ class, ordered:
 Recall tracks training frequency almost perfectly (6,330 helmet instances → 0.888; 291 no-helmet →
 0.545). This is not a modelling failure, it is a dataset failure, and it is fixable with data
 rather than with hyperparameters.
+The failure cases below narrow this further. Two of the three misses are not about frequency at
+all: FN-1 is a bare-headed person in non-construction dress, FN-2 a soft cap. Both suggest
+`no-helmet` has learned site context and head-covering-shape rather than the absence of a hard hat.
+More instances of the same stock imagery would not fix either. The dataset is largely web-scraped
+studio and group photography rather than site or CCTV frames, which is the deployment condition the
+README proposes.
 
 ---
 
 ## False positives
 
-### FP-1 — `no-vest` on a clothed torso that is not a worker
-- **Evidence:** `results/evidence/fp_01.png` — [FILL: filename from your prediction run]
-- **Observed:** `no-vest` has the lowest precision of any class (0.764), meaning roughly a quarter
-  of its detections are wrong.
-- **Hypothesis:** `no-vest` is defined by an **absence**, so the model has to learn a negative.
-  Any torso-shaped region without high-saturation yellow or orange satisfies it. Bystanders,
-  people in the background and dark clothing all qualify visually, and at 2,222 instances there is
-  not enough variety for the model to learn the surrounding context that distinguishes "worker
-  without a vest" from "person who is not a worker".
-- **Cost:** a supervisor opens a frame showing a visitor in a coat. Cheap individually, corrosive
-  to trust if frequent.
+All three highest-confidence "false positives" are, on inspection, correct detections. This is the
+most important finding in the error analysis and it changes how the precision figure should be read.
 
-### FP-2 — `helmet` on helmet-coloured objects
-- **Evidence:** `results/evidence/fp_02.png` — [FILL]
-- **Observed:** `helmet` precision 0.921 — about 1 in 13 helmet detections is wrong.
-- **Hypothesis:** the classic look-alike failure from Session 2. A hard hat at distance is a
-  smooth, saturated, roughly hemispherical blob. Buckets, traffic cones, drums and machinery
-  housings share that signature, and the dataset contains no labelled negatives for them.
-- **Cost:** low. A spurious helmet does not trigger an alert in a recall-first configuration.
+### FP-1 — `helmet` at 0.91 on a worker plainly wearing one
+![FP-1](../results/evidence/fp_01_helmet.png)
+**Observed:** a white hard hat, detected at 0.91, counted against precision.
+**Hypothesis:** the ground-truth box is missing or falls below IoU 0.5 against the prediction. The
+model is right and the label is wrong.
+**Cost:** none operationally. But it means measured precision (0.863) is a floor, not a true value.
 
-### FP-3 — Duplicate and overlapping boxes on the same person
-- **Evidence:** `results/evidence/fp_03.png` — [FILL]
-- **Observed:** mAP@50–95 (0.474) is far below mAP@50 (0.867), which is the signature of loose,
-  drifting boxes rather than of missed objects.
-- **Hypothesis:** the schema places three overlapping labels on one compliant worker (`person`,
-  `helmet`, `vest`). In crowded frames NMS has to separate boxes that genuinely overlap, and the
-  looser the fit the more duplicates survive.
-- **Cost:** inflated counts. Any use of this model for headcount would be wrong.
+### FP-2 — `person` at 0.88 on a person
+![FP-2](../results/evidence/fp_02_person.png)
+**Observed:** same pattern as FP-1, on the `person` class.
+**Hypothesis:** unlabelled instance. Note also the visible `huitu.com` commercial watermark — the
+source dataset contains stock imagery whose provenance is less clean than its CC BY 4.0
+declaration implies. Recorded in the governance checklist.
+
+### FP-3 — `person`, box geometry
+![FP-3](../results/evidence/fp_03_person.png)
+**Observed:** two foreground workers; the prediction spans a different extent than the ground truth.
+**Hypothesis:** localisation, not detection — consistent with mAP@50–95 (0.474) sitting far below
+mAP@50 (0.867).
+
+**Implication.** An audit of the validation labels should precede any further training. Part of the
+precision gap is label noise, and improvements measured against noisy ground truth cannot be trusted.
 
 ---
 
 ## False negatives
 
-### FN-1 — Unhelmeted worker not flagged (the critical one)
-- **Evidence:** `results/evidence/fn_01.png` — [FILL]
-- **Observed:** `no-helmet` recall 0.545 — about **5 of the 11** unhelmeted people in the
-  validation set were missed entirely.
-- **Hypothesis:** **class imbalance.** With 291 training instances against 6,330 for `helmet`, the
-  loss is dominated by the helmet class; the cheapest thing the model can do with an ambiguous head
-  is stay silent or call it `helmet`. Precision of 0.947 on the same class confirms the shape of
-  the problem: the model has learned what a bare head looks like, it has just learned to require
-  very strong evidence before saying so.
-- **Cost:** **this is the failure the system exists to prevent.** A worker without a hard hat
-  passes unflagged in roughly half of cases. Stated plainly in the governance checklist.
+### FN-1 — bare-headed figure missed on a studio composite
+![FN-1](../results/evidence/fn_01_no-helmet.png)
+**Observed:** three cut-out figures on a transparent background. `helmet`, `person`, `vest` and
+`no-vest` all fire correctly on the two workers; the bare-headed figure in the centre is missed.
+**Hypothesis:** she reads as clinical, not construction — white coat, stethoscope, no site context.
+`no-helmet` appears to have co-learned site cues rather than the absence of a hard hat.
+**Cost:** the class fails precisely where PPE context is absent — which includes anyone entering a
+site in street clothes.
 
-### FN-2 — Distant and small instances missed
-- **Evidence:** `results/evidence/fn_02.png` — [FILL]
-- **Observed:** [FILL: confirm on your own prediction images — look for people in the background
-  detected as `person` but with no PPE class attached].
-- **Hypothesis:** *scale*. At `imgsz=640`, a head 20 m from the camera is a handful of pixels. The
-  `person` box survives because the body is large; the helmet region does not carry enough signal,
-  so the PPE classes go undetected while `person` succeeds. This matches `person` recall (0.919)
-  being far above every PPE class.
-- **Cost:** compliance cannot be assessed beyond a certain distance — a hard operating limit that
-  belongs in the limitations statement.
+### FN-2 — soft cap scored 0.21, below threshold
+![FN-2](../results/evidence/fn_02_no-helmet.png)
+**Observed:** group portrait; the man at left wears a baseball cap. A near miss, not a cold miss.
+**Hypothesis:** the model treats any head covering as helmet-ambiguous and suppresses the
+`no-helmet` score rather than committing.
+**Cost:** highest-value labelling gap available. Caps, hoods and beanies labelled explicitly as
+`no-helmet` is the single cheapest fix in this document.
 
-### FN-3 — Occluded workers
-- **Evidence:** `results/evidence/fn_03.png` — [FILL]
-- **Observed:** [FILL: look for workers behind formwork, machinery or other people].
-- **Hypothesis:** *occlusion*. When only a head and shoulders are visible, the PPE classes lose the
-  context that normally supports them. Rule 2 in `class_definitions.md` says partial people are
-  labelled, but partial instances are a small fraction of the training data.
-- **Cost:** sites are cluttered; this is the normal viewing condition, not the exception.
+### FN-3 — dense scene, small heads
+![FN-3](../results/evidence/fn_03_no-helmet.png)
+**Observed:** twenty-plus people in hi-vis, heads at roughly 30 px.
+**Hypothesis:** scale, not semantics. At `imgsz=640` these heads sit near the detector's floor.
+**Cost:** a hard operating limit — compliance cannot be assessed beyond a given distance. Tiling
+large frames at inference, or raising `imgsz`, addresses it without retraining.
 
 ---
 
@@ -117,9 +113,13 @@ would not fix any of this.
    measurement trustworthy, which is a prerequisite for showing improvement #1 actually worked.
    Effort: ~1 h.
 
-3. **Add hard negatives for `no-vest` and `helmet`.** Targets FP-1 and FP-2: frames containing
-   buckets, cones, drums and non-worker bystanders, labelled as background. Expected effect:
-   `no-vest` precision up from 0.764; fewer helmet look-alikes. Effort: ~2 h.
+3. **Audit the validation labels.** Targets FP-1 and FP-2, which are unlabelled true instances
+   rather than model errors. Until the ground truth is clean, precision cannot be measured and any
+   improvement claim rests on noise. Effort: ~2 h.
+
+4. **Add hard negatives for `no-vest` and `helmet`.** Frames containing buckets, cones, drums and
+   non-worker bystanders, labelled as background. Expected effect: `no-vest` precision up from
+   0.764; fewer helmet look-alikes. Effort: ~2 h.
 
 Explicitly **not** on the list: more epochs, `yolov8s`, heavier augmentation. Validation mAP
 plateaued at epoch 9 of 24 — the ceiling here is data coverage, not training.
