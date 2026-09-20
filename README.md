@@ -150,13 +150,12 @@ Nothing is read from a local drive.
 - **Last successful end-to-end run:** 2026-09-19, 11:15–11:57 UTC
 - **Hardware:** Google Colab, NVIDIA Tesla T4 (15 GB), driver 580.82.07, CUDA 13.0
 - **Runtime:** 24 epochs in 0.292 h (~17.5 min), plus ~5 min dataset download and setup
-- **Outputs produced:** per-class metrics, `results.png`, confusion matrix, PR curve, class
-  distribution chart, 6 annotated validation predictions, `best.pt`
+- **Outputs produced:** per-class metrics, confusion matrix, PR curve, F1 curve, annotated
+  validation batches, `best.pt`
 - **Early stopping:** 50 epochs were configured with `patience=15`; training stopped at epoch 24
   after 15 without improvement, and best weights are from **epoch 9**. Early stopping is a
-  deliberate anti-overfitting measure rather than a shortened run — the loss curves in
-  `results/results.png` show validation loss flat from epoch 9 onward, so the remaining 26 epochs
-  would have added compute without improving the model.
+   deliberate anti-overfitting measure rather than a shortened run — validation mAP was flat from
+  epoch 9 onward, so the remaining 26 epochs would have added compute without improving the model.
 
 ---
 
@@ -178,6 +177,8 @@ Nothing is read from a local drive.
 │   └── pip_freeze.txt           environment snapshot
 ├── results/
 │   ├── README.md                what belongs in this folder
+│   ├── BoxPR_curve.png          precision–recall curve
+│   ├── confusion_matrix.png     class confusion and background leakage
 │   └── evidence/                failure cases, validation preds, new-image preds
 └── samples/
     ├── val/                     10 validation images, fetched by 02_Inference
