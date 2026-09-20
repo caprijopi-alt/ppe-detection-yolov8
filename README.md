@@ -197,3 +197,9 @@ Nothing is read from a local drive.
   an Ultralytics Enterprise Licence is obtained.
 - **Evidence screenshots:** derived from the CC BY 4.0 dataset. Faces are visible in some source
   images — see the PII section of [`docs/governance_checklist.md`](docs/governance_checklist.md).
+  ---
+
+## 10. PDF pack
+
+- [Slides](docs/slides.pdf) — 7 slides
+- [Mini report](docs/mini_report.pdf) — 2 pages
