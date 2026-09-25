@@ -1,8 +1,9 @@
 # PPE detection on construction imagery — YOLOv8
 
 Course: MAICEN — Module 4, Unit 3 (Computer Vision) · FMP group assignment
-Team: Americo Nuno Caldas Teixeira, Jose Brito de Barros Aguiar, Manuel González Oliva, Natalia Lungu, Cesare Della Corte
+Team: Americo Nuno Caldas Teixeira
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/caprijopi-alt/ppe-detection-yolov8/blob/main/notebooks/02_Inference.ipynb)
 > **Safety label / limitations declaration**
 > This model is an assistive tool for preliminary screening only. It produces false negatives.
 > It must **NOT** be used as the sole verifier for life-safety decisions. Every detection is
@@ -58,15 +59,21 @@ root cause of the recall failure above and drives the whole iteration plan.
 
 ## 3. Dataset
 
-- **Source:** [construction-safety-gsnvb-oz6um v1](https://universe.roboflow.com/caprijopi-hotmail-com/construction-safety-gsnvb-oz6um/dataset/1),
-  forked from the Roboflow-100 `construction-safety-gsnvb` benchmark into workspace
-  `caprijopi-hotmail-com`
-- **Licence:** CC BY 4.0 · **Export format:** YOLOv8
-- **Split:** 2,983 train / 121 valid / 84 test. Train is 1,001 source images augmented 3×
-  (horizontal flip, brightness ±15%); 1,206 source images in total.
-- **Note on the split.** This is the dataset's native RF100 split (≈83/10/7), kept so results stay
+- **Roboflow Universe:** [construction-safety-gsnvb-oz6um **version 1**](https://universe.roboflow.com/caprijopi-hotmail-com/construction-safety-gsnvb-oz6um/dataset/1),
+  forked from the Roboflow-100 `construction-safety-gsnvb` benchmark
+- **Keyless download:** [`construction-safety-v1-yolov8.zip`](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/construction-safety-v1-yolov8.zip)
+  (190 MB, release `v1.0`) — the frozen export the published results were trained on. The notebooks
+  fetch this, so they run with no Roboflow account and no API key.
+- **SHA256:** `9ae7044a16fc8d7364d52f23d023abde5e06da5d748ea126768358da636be7c4`
+- **Classes:** `helmet`, `no-helmet`, `no-vest`, `person`, `vest`
+- **Splits:** 2,983 train / 121 valid / 84 test images — 1,206 source images, train augmented 3×
+- **Preprocessing and augmentation (Roboflow v1):** horizontal flip, brightness ±15%
+- **Note on the split.** The dataset's native RF100 split (≈83/10/7), kept so results stay
   comparable with the published baseline. The brief asks for 80/20 — see
-  [`docs/class_definitions.md`](docs/class_definitions.md) §6 for the decision and the fallback.
+  [`docs/class_definitions.md`](docs/class_definitions.md) §6.
+- **Licence:** CC BY 4.0. The release mirrors the licence declared on Universe; the rights claim is
+  the original publisher's, not ours. Some source images carry third-party commercial watermarks —
+  recorded in [`docs/governance_checklist.md`](docs/governance_checklist.md) §2.
 - **Published RF100 baseline:** mAP@50 0.882, precision 0.928, recall 0.774.
 
 ---
@@ -85,10 +92,9 @@ Nothing is read from a local drive.
 ### Full reproduction (training)
 
 1. Open [`notebooks/01_Training.ipynb`](notebooks/01_Training.ipynb) in Colab (T4 GPU).
-2. Runtime → **Run all**. It prompts for a Roboflow API key (never hardcoded), downloads dataset
-   v1, audits it, trains, validates, and writes curves and predictions.
+2. Runtime → **Run all**. It downloads the frozen dataset from the release, verifies its SHA256,
+   audits it, trains, validates, and writes curves and predictions. No API key is requested.
 3. Expected runtime: **~18 min** of training (24 epochs on a T4) plus ~5 min setup and download.
-
 ---
 
 ## 5. Results
@@ -139,7 +145,8 @@ Nothing is read from a local drive.
 - [x] **Ultralytics:** 8.4.155 · **torch:** 2.11.0+cu128 · **torchvision:** 0.26.0+cu128 ·
       **roboflow:** 1.5.0 · **numpy:** 2.1.3 · **Python:** 3.13.15
 - [x] **Weights:** [`best.pt`](https://github.com/caprijopi-alt/ppe-detection-yolov8/releases/download/v1.0/best.pt) from epoch 9, published as a GitHub Release asset (`v1.0`)
-- [x] **API key:** prompted via `getpass`, never committed
+- [x] **Credentials:** none. Dataset and weights both download from the public release; the
+      optional Roboflow cell skips itself when the dataset is already present.
 - [x] **Environment snapshot:** full `pip freeze` from the training runtime in
       [`docs/pip_freeze.txt`](docs/pip_freeze.txt) (Colab, 2026-09-19)
 - [x] **Randomness:** `seed=0`; GPU non-determinism still moves metrics by roughly ±0.01 mAP
@@ -192,7 +199,8 @@ Nothing is read from a local drive.
 - **Code:** MIT — see [`LICENSE`](LICENSE)
 - **Dataset:** `construction-safety-gsnvb`, Roboflow-100 benchmark, **CC BY 4.0**. Attribution
   retained; forked into `caprijopi-hotmail-com` and used unmodified at v1. No images of our own and
-  no client site photography are included.
+  no client site photography are included.  A frozen export is republished as a release asset under the same CC BY 4.0 terms so the notebooks
+  run without credentials; see §3 and `docs/governance_checklist.md` §2.
 - **Weights:** fine-tuned from Ultralytics YOLOv8, licensed **AGPL-3.0**. Distribution or networked
   deployment of `best.pt`, or of code importing `ultralytics`, carries AGPL-3.0 obligations unless
   an Ultralytics Enterprise Licence is obtained.
