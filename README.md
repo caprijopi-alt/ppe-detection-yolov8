@@ -154,7 +154,9 @@ Nothing is read from a local drive.
 
 ## 7. Reproducibility proof
 
-- **Last successful end-to-end run:** 2026-09-19, 11:15–11:57 UTC
+- **Last successful end-to-end run:** 2026-09-25, 18:53 (UTC+1) — `02_Inference.ipynb` opened from
+  the README badge on a fresh Colab runtime with no credentials; completed without prompts. Training
+  run of record: 2026-09-19, 11:15–11:57 UTC.
 - **Hardware:** Google Colab, NVIDIA Tesla T4 (15 GB), driver 580.82.07, CUDA 13.0
 - **Runtime:** 24 epochs in 0.292 h (~17.5 min), plus ~5 min dataset download and setup
 - **Outputs produced:** per-class metrics, confusion matrix, PR curve, F1 curve, annotated
