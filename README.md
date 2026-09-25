@@ -184,8 +184,7 @@ Nothing is read from a local drive.
 │   └── pip_freeze.txt           environment snapshot
 ├── results/
 │   ├── README.md                what belongs in this folder
-│   ├── BoxPR_curve.png          precision–recall curve
-│   ├── confusion_matrix.png     class confusion and background leakage
+│   ├── curves/                  PR, F1, P, R curves · confusion matrices · val batches
 │   └── evidence/                failure cases, validation preds, new-image preds
 └── samples/
     ├── val/                     10 validation images, fetched by 02_Inference
